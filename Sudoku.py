@@ -21,6 +21,8 @@ def printBoardSimple(Board):
 
 def pencil(Board, r, c):
      '''Takes in the game board, a row number, a column number. Returns an array representing the pencil for the tile
+     
+     Note: can be used to verify a completed game board. for each game tile, will return a single element list containing the number for that tile.
      '''
      import math
      #pencil in board at position
@@ -70,9 +72,26 @@ def printBoard():
           else:
                print("             ::             ::             ")
 
-if __name__ == "__main__":
-     Board = [[0 for i in range(9)] for j in range(9)]
+def solveBoard(Board, recursionLevel = 0):
+     '''Takes in the game board and tries to solve it, returns the solved game board or None of falure
      
+     Takes in the game board and tries to solve it, along with the recursion level.
+     Recurses when it has to take a guess.
+     returns the game board on success, None on failure.
+     '''
+     
+     pass
+
+if __name__ == "__main__":
+     
+     Board = [[0 for i in range(9)] for j in range(9)]
+     ''' Acceptable board values
+     1-9   = filled in board tile
+     0     = empty board tile to be penciled
+     [1-9] = a tile with multiple penciled in values
+     []    = a tile with no filled value and no possible penciled value, an error somewhere else on the board
+     '''
+     '''
      #Gets the puzzle from the user to solve
      for i in range(9):
           raw = input("input puzzle line " + str(i+1) + ":")
@@ -80,6 +99,17 @@ if __name__ == "__main__":
           for j in range(9):
                if raw[j] in ("1","2","3","4","5","6","7","8","9"):
                     Board[i][j] = int(raw[j])
+     '''
+     #a debug board configuration
+     Board = [[0,7,0,9,0,0,0,0,0],
+              [0,0,3,0,7,1,2,0,0],
+              [0,0,4,8,5,0,0,7,3],
+              [0,0,1,0,0,0,5,0,7],
+              [0,4,6,5,0,7,3,8,1],
+              [5,0,7,1,0,0,9,0,2],
+              [7,0,0,0,1,9,8,0,0],
+              [0,0,8,2,6,5,7,0,0],
+              [0,0,9,7,0,8,0,2,0]]
                     
      printBoardSimple(Board)
      
