@@ -2,23 +2,6 @@
 A small program to solve a sudoku puzzle
 '''
 
-def printBoardSimple(Board):
-     ''' Takes in the game board, and prints a simple represention (without pencil
-     '''
-     for i in range(9):
-          t1 = ""
-          for j in range(9):
-               if Board[i][j] == 0:
-                    t1 += " "
-               elif type(Board[i][j]) != type([]):
-                    t1 += str(Board[i][j])
-               else:
-                    t1 += " "
-               if (j%3 == 2) and (j != 8):
-                    t1 += "|"
-          print(t1)
-          print("---+---+---") if (i%3 == 2) and (i != 8) else None
-
 def pencil(Board, r, c):
      '''Takes in the game board, a row number, a column number. Returns an array representing the pencil for the tile
      
@@ -46,31 +29,6 @@ def pencil(Board, r, c):
                     possible.remove(Board[tRow + x][tColumn + y])
      
      return possible
-
-def printBoard():
-     line = ""
-     for i in range(9): #board row
-          for j in range(3): #board subrow
-               line = ""
-               for k in range(9): #column
-                    for l in range(3): #subcolumn
-                         #line += str(j*3 + l)
-                         if type(Board[i][k]) == type([]):
-                              if j*3+l+1 in Board[i][k]:
-                                   line += str(j*3+l+1)
-                              else:
-                                   line += " "
-                         else:
-                              line += " "
-                    if (k==2) or (k==5):
-                         line += "::"
-                    else:
-                         line += "  "
-               print(line)
-          if (i==2) or (i==5):
-               print("=============++=============++=============")
-          else:
-               print("             ::             ::             ")
 
 def solveBoard(Board, recursionLevel = 0):
      '''Takes in the game board and tries to solve it, returns the solved game board or None of falure
@@ -138,16 +96,28 @@ def bitPatternToBrailleSquare(rawInput : List[bool]) -> str:
      return chr(leftValue) + chr(rightValue)
 
 def field9x9_toString(field : List[List[int or None]], possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]) -> str:
-     '''Takes in a 9x9 field and returns a string representing the field.
+     '''Takes in a 9x9 field and returns a string representing the field to be printed to screen.
 
-     The string is a list of 81 characters, each representing a tile.
-     '-' is converted to None
+     also takes in a 'possible' field to represent the pencil possibility space of the field.
+     unfilled values in field are represented by a unicode braille characters.
 
      #TODO: add a test for this function
      use the following test to verify the output
           possible : List[List[List[bool]]] = [[[True if i == "1" else False for i in bin(random.randint(0, 0xffff))[2:].rjust(16, '0')] for _ in range(9)] for _ in range(9)]
      '''
-     #TODO asserts
+     assert type(field) is list
+     assert len(field) == 9
+     assert all(type(i) is list for i in field)
+     assert all(len(i) == 9 for i in field)
+     assert all(all(type(j) is int or j is None for j in i) for i in field)
+
+     assert type(possible) is list
+     assert len(possible) == 9
+     assert all(type(i) is list for i in possible)
+     assert all(len(i) == 9 for i in possible)
+     assert all(all(type(j) is list for j in i) for i in possible)
+     assert all(all(len(j) == 16 for j in i) for i in possible)
+     assert all(all(all(type(k) is bool for k in j) for j in i) for i in possible)
 
      output : str = ""
 
@@ -164,34 +134,21 @@ def field9x9_toString(field : List[List[int or None]], possible : List[List[List
                output += "------+------+------\n"
      return output
 
-def field9x9_toStringSimple(field : List[List[int or None]]) -> str:
-     '''Takes in a sudoku board, and returns a string representing a standard 9x9 board.
      '''
      assert type(field) is list
      assert type(field[0]) is list #TODO
      assert len(field) == 9
      assert len(field[0]) == 9 #TODO
 
-     output : str = ""
 
      for i in range(9):
           for j in range(9):
                if field[i][j] == None:
-                    output += "  "
-               else:
-                    output += str(field[i][j]).rjust(2)
-               if (j%3 == 2) and (j != 8):
-                    output += "|"
-          output += "\n"
-          if (i%3 == 2) and (i != 8):
-               output += "------+------+------\n"
 
-     return output
 
      '''
      for i in range(9):
           for j in range(9):
-     '''
      
      for i in range(9):
           for j in range(9):
