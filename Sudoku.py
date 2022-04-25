@@ -213,8 +213,32 @@ def solveSudoku(field : List[List[int or None]]) -> List[List[int or None]] or N
      
      return None #TODO this is a code hole
 
+def verify9x9(field : List[List[int or None]]) -> bool: #TODO test
+     '''Takes in a sudoku board, and returns True iff the board is valid, False otherwise.
+     '''
+     assert type(field) is list
+     assert len(field) == 9
+     assert all(type(i) is list for i in field)
+     assert all(len(i) == 9 for i in field)
+     assert all(all(type(j) is int or j is None for j in i) for i in field)
+
+     possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
+
+     valid : bool = True
      for i in range(9):
           for j in range(9):
+               if field[i][j] == None: # checks that an empty cell has the possibility of being filled in
+                    possible = pencil9x9_singleCell(field, i, j)
+                    if sum(possible) == 0:
+                         valid = False
+               else: # checks that a filled cell has a penciled value such that the value of that cell is possible
+                    tempField : List[List[int or None]] = deepcopy(field)
+                    tempField[i][j] = None
+
+                    possible = pencil9x9_singleCell(tempField, i, j)
+                    if possible[field[i][j] - 1] == False:
+                         valid = False
+     return valid
 
 if __name__ == "__main__":
 
@@ -275,3 +299,6 @@ if __name__ == "__main__":
      print(field9x9_toString(field, possible))
 
      print(field9x9_toString(solveSudoku(field)))
+
+     print(verify9x9(solveSudoku(field)))
+
