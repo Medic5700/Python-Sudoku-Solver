@@ -217,42 +217,10 @@ def solveSudoku(field : List[List[int or None]]) -> List[List[int or None]] or N
           for j in range(9):
 
 if __name__ == "__main__":
-     
-     # Board = [[0 for i in range(9)] for j in range(9)]
-     # ''' Acceptable board values
-     # 1-9   = filled in board tile
-     # 0     = empty board tile to be penciled
-     # [1-9] = a tile with multiple penciled in values
-     # []    = a tile with no filled value and no possible penciled value, an error somewhere else on the board
-     # '''
-     # '''
-     # #Gets the puzzle from the user to solve
-     # for i in range(9):
-     #      raw = input("input puzzle line " + str(i+1) + ":")
-     #      raw = raw.ljust(9," ")
-     #      for j in range(9):
-     #           if raw[j] in ("1","2","3","4","5","6","7","8","9"):
-     #                Board[i][j] = int(raw[j])
-     # '''
-     # #a debug board configuration
-     # Board = [[0,7,0,9,0,0,0,0,0],
-     #          [0,0,3,0,7,1,2,0,0],
-     #          [0,0,4,8,5,0,0,7,3],
-     #          [0,0,1,0,0,0,5,0,7],
-     #          [0,4,6,5,0,7,3,8,1],
-     #          [5,0,7,1,0,0,9,0,2],
-     #          [7,0,0,0,1,9,8,0,0],
-     #          [0,0,8,2,6,5,7,0,0],
-     #          [0,0,9,7,0,8,0,2,0]]
-                    
-     # printBoardSimple(Board)
-     
-     # for i in range(9):
-     #      for j in range(9):
-     #           Board[i][j] = pencil(Board, i,j)     
-     
-     # printBoard()
 
+     #TODO setup debug logging
+
+     field : List[List[int]] = [[None for _ in range(9)] for _ in range(9)]
 
      testField : str
      
@@ -296,3 +264,14 @@ if __name__ == "__main__":
      # 185429673
      # 374561298
      
+     field = stringToField(testField)
+
+     print(field9x9_toString(field))
+
+     possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
+
+     possible = pencil9x9(field)
+
+     print(field9x9_toString(field, possible))
+
+     print(field9x9_toString(solveSudoku(field)))
