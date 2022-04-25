@@ -86,7 +86,27 @@ def solveBoard(Board, recursionLevel = 0):
 from typing import Any, Callable, Dict, Generic, List, Literal, Text, Tuple
 from copy import deepcopy
 
+def stringToField(rawInput : str) -> List[List[int or None]]:
+     '''Takes in a string representing a sudoku board, and returns a list of lists representing the board.
+
+     Single digit hexadecimal numbers are converted to ints.
+     '-' is converted to None
+
+     result[y][x] is the value at position (x,y), origin at top left, x increasing right, y increasing down
+     '''
+     assert type(rawInput) is str
+     assert len(rawInput) >= 81
+
+     field : List[List[int or None]] = [[None for _ in range(9)] for _ in range(9)]
+
+     rawNumbers : List[int or None] = [int(j, base=16) if (j in "0123456789abcdef") else None for j in [i for i in rawInput.lower() if ((i in "0123456789abcdef") or i == "-")]]
      
+     assert len(rawNumbers) == 81
+
+     field = [[rawNumbers[i*9 + j] for j in range(9)] for i in range(9)]
+
+     return field
+
      '''
      '''
      for i in range(9):
