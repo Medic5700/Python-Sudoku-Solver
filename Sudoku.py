@@ -82,40 +82,54 @@ def solveBoard(Board, recursionLevel = 0):
      
      pass
 
+# typing, for documentation purposes
+from typing import Any, Callable, Dict, Generic, List, Literal, Text, Tuple
+from copy import deepcopy
+
+     
+     '''
+     '''
+     for i in range(9):
+          for j in range(9):
+     '''
+     
+     for i in range(9):
+          for j in range(9):
+
 if __name__ == "__main__":
      
-     Board = [[0 for i in range(9)] for j in range(9)]
-     ''' Acceptable board values
-     1-9   = filled in board tile
-     0     = empty board tile to be penciled
-     [1-9] = a tile with multiple penciled in values
-     []    = a tile with no filled value and no possible penciled value, an error somewhere else on the board
-     '''
-     '''
-     #Gets the puzzle from the user to solve
-     for i in range(9):
-          raw = input("input puzzle line " + str(i+1) + ":")
-          raw = raw.ljust(9," ")
-          for j in range(9):
-               if raw[j] in ("1","2","3","4","5","6","7","8","9"):
-                    Board[i][j] = int(raw[j])
-     '''
-     #a debug board configuration
-     Board = [[0,7,0,9,0,0,0,0,0],
-              [0,0,3,0,7,1,2,0,0],
-              [0,0,4,8,5,0,0,7,3],
-              [0,0,1,0,0,0,5,0,7],
-              [0,4,6,5,0,7,3,8,1],
-              [5,0,7,1,0,0,9,0,2],
-              [7,0,0,0,1,9,8,0,0],
-              [0,0,8,2,6,5,7,0,0],
-              [0,0,9,7,0,8,0,2,0]]
+     # Board = [[0 for i in range(9)] for j in range(9)]
+     # ''' Acceptable board values
+     # 1-9   = filled in board tile
+     # 0     = empty board tile to be penciled
+     # [1-9] = a tile with multiple penciled in values
+     # []    = a tile with no filled value and no possible penciled value, an error somewhere else on the board
+     # '''
+     # '''
+     # #Gets the puzzle from the user to solve
+     # for i in range(9):
+     #      raw = input("input puzzle line " + str(i+1) + ":")
+     #      raw = raw.ljust(9," ")
+     #      for j in range(9):
+     #           if raw[j] in ("1","2","3","4","5","6","7","8","9"):
+     #                Board[i][j] = int(raw[j])
+     # '''
+     # #a debug board configuration
+     # Board = [[0,7,0,9,0,0,0,0,0],
+     #          [0,0,3,0,7,1,2,0,0],
+     #          [0,0,4,8,5,0,0,7,3],
+     #          [0,0,1,0,0,0,5,0,7],
+     #          [0,4,6,5,0,7,3,8,1],
+     #          [5,0,7,1,0,0,9,0,2],
+     #          [7,0,0,0,1,9,8,0,0],
+     #          [0,0,8,2,6,5,7,0,0],
+     #          [0,0,9,7,0,8,0,2,0]]
                     
-     printBoardSimple(Board)
+     # printBoardSimple(Board)
      
-     for i in range(9):
-          for j in range(9):
-               Board[i][j] = pencil(Board, i,j)     
+     # for i in range(9):
+     #      for j in range(9):
+     #           Board[i][j] = pencil(Board, i,j)     
      
-     printBoard()
+     # printBoard()
 
