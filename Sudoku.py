@@ -2,34 +2,6 @@
 A small program to solve a sudoku puzzle
 '''
 
-def pencil(Board, r, c):
-     '''Takes in the game board, a row number, a column number. Returns an array representing the pencil for the tile
-     
-     Note: can be used to verify a completed game board. for each game tile, will return a single element list containing the number for that tile.
-     '''
-     import math
-     #pencil in board at position
-     if Board[r][c] != 0:
-          return Board[r][c]
-     possible = [1,2,3,4,5,6,7,8,9]
-     for x in range(9): #checks the row
-          if Board[x][c] in possible:
-               possible.remove(Board[x][c])
-     for y in range(9): #checks the column
-          if Board[r][y] in possible:
-               possible.remove(Board[r][y])
-               
-     #find the top left position of a 3x3 tile
-     tRow = math.floor(r/3)*3
-     tColumn = math.floor(c/3)*3
-     
-     for x in range(3):
-          for y in range(3):
-               if Board[tRow + x][tColumn + y] in possible:
-                    possible.remove(Board[tRow + x][tColumn + y])
-     
-     return possible
-
 def solveBoard(Board, recursionLevel = 0):
      '''Takes in the game board and tries to solve it, returns the solved game board or None of falure
      
@@ -134,17 +106,55 @@ def field9x9_toString(field : List[List[int or None]], possible : List[List[List
                output += "------+------+------\n"
      return output
 
+def pencil9x9_singleCell(field : List[List[int or None]], y : int, x : int) -> List[bool]:
+     '''Takes in a sudoku board, and returns a list of lists representing the pencil marks for the cell at (i,j).
      '''
      assert type(field) is list
-     assert type(field[0]) is list #TODO
      assert len(field) == 9
-     assert len(field[0]) == 9 #TODO
+     assert all(type(i) is list for i in field)
+     assert all(len(i) == 9 for i in field)
+     assert all(all(type(j) is int or j is None for j in i) for i in field)
 
+     assert type(y) is int
+     assert y in range(9)
+     assert type(x) is int
+     assert x in range(9)
+
+     possible : List[bool] = [True if i == "1" else False for i in "1111111110000000"]
+
+     for i in range(9): # check row
+          if field[y][i] != None:
+               value = field[y][i]
+               possible[value - 1] = False
+     for i in range(9): # check column
+          if field[i][x] != None:
+               value = field[i][x]
+               possible[value - 1] = False
+     for i in range(3): # check square
+          for j in range(3):
+               if field[(y//3)*3 + i][(x//3)*3 + j] != None:
+                    value = field[(y//3)*3 + i][(x//3)*3 + j]
+                    possible[value - 1] = False
+
+     return possible
+
+def pencil9x9(field : List[List[int or None]]) -> List[List[List[bool]]]:
+     '''Takes in a sudoku board, and returns a list of lists representing the pencil marks for all cells.
+     '''
+     assert type(field) is list
+     assert len(field) == 9
+     assert all(type(i) is list for i in field)
+     assert all(len(i) == 9 for i in field)
+     assert all(all(type(j) is int or j is None for j in i) for i in field)
+
+     possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
 
      for i in range(9):
           for j in range(9):
                if field[i][j] == None:
+                    possible[i][j] = pencil9x9_singleCell(field, i, j)
 
+     return possible
 
      '''
      for i in range(9):
