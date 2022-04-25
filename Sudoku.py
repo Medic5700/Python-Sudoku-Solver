@@ -107,7 +107,63 @@ def stringToField(rawInput : str) -> List[List[int or None]]:
 
      return field
 
+def bitPatternToBrailleSquare(rawInput : List[bool]) -> str:
+     '''Takes in a list of booleans representing a braille square, and returns a string representing the square.
+
+     Numbering of the braille squares is as follows:
+          0 1 | 2 3
+          4 5 | 6 7
+          8 9 | a b
+          c d | e f
+          left|right
+
+     #TODO: add a test for this function
+     test with 
+          bitPatternToBrailleSquare([True if i == "1" else False for i in "1111111000000000"])
      '''
+     assert type(rawInput) is list
+     assert len(rawInput) == 16
+     assert all(type(i) is bool for i in rawInput)
+
+     leftmap : List[bool] =  (rawInput[0x0], rawInput[0x1], rawInput[0x4], rawInput[0x5],
+                              rawInput[0x8], rawInput[0x9], rawInput[0xc], rawInput[0xd])
+     rightmap : List[bool] = (rawInput[0x2], rawInput[0x3], rawInput[0x6], rawInput[0x7],
+                              rawInput[0xa], rawInput[0xb], rawInput[0xe], rawInput[0xf])
+
+     brailleValueMap : List[int] = [0x01, 0x08, 0x02, 0x10, 0x04, 0x20, 0x40, 0x80] # maps a value to every 'dot' corrisponding to positions '014589cd'
+
+     leftValue : int = 0x2800 + sum([leftmap[i]*brailleValueMap[i] for i in range(8)])
+     rightValue : int = 0x2800 + sum([rightmap[i]*brailleValueMap[i] for i in range(8)])
+
+     return chr(leftValue) + chr(rightValue)
+
+def field9x9_toString(field : List[List[int or None]], possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]) -> str:
+     '''Takes in a 9x9 field and returns a string representing the field.
+
+     The string is a list of 81 characters, each representing a tile.
+     '-' is converted to None
+
+     #TODO: add a test for this function
+     use the following test to verify the output
+          possible : List[List[List[bool]]] = [[[True if i == "1" else False for i in bin(random.randint(0, 0xffff))[2:].rjust(16, '0')] for _ in range(9)] for _ in range(9)]
+     '''
+     #TODO asserts
+
+     output : str = ""
+
+     for i in range(9):
+          for j in range(9):
+               if field[i][j] == None:
+                    output += bitPatternToBrailleSquare(possible[i][j])
+               else:
+                    output += str(field[i][j]).rjust(2)
+               if (j%3 == 2) and (j != 8):
+                    output += "|"
+          output += "\n"
+          if (i%3 == 2) and (i != 8):
+               output += "------+------+------\n"
+     return output
+
 def field9x9_toStringSimple(field : List[List[int or None]]) -> str:
      '''Takes in a sudoku board, and returns a string representing a standard 9x9 board.
      '''
