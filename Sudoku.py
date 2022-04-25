@@ -2,16 +2,6 @@
 A small program to solve a sudoku puzzle
 '''
 
-def solveBoard(Board, recursionLevel = 0):
-     '''Takes in the game board and tries to solve it, returns the solved game board or None of falure
-     
-     Takes in the game board and tries to solve it, along with the recursion level.
-     Recurses when it has to take a guess.
-     returns the game board on success, None on failure.
-     '''
-     
-     pass
-
 # typing, for documentation purposes
 from typing import Any, Callable, Dict, Generic, List, Literal, Text, Tuple
 from copy import deepcopy
@@ -156,10 +146,73 @@ def pencil9x9(field : List[List[int or None]]) -> List[List[List[bool]]]:
 
      return possible
 
+def solveSudoku(field : List[List[int or None]]) -> List[List[int or None]] or None:
+     '''Takes in a sudoku board, and returns a list of lists representing the solved board. Returns None if no solution exists.
      '''
+     assert type(field) is list
+     assert len(field) == 9
+     assert all(type(i) is list for i in field)
+     assert all(len(i) == 9 for i in field)
+     assert all(all(type(j) is int or j is None for j in i) for i in field)
+
+     possible : List[List[List[bool]]]
+
+     newField : List[List[int or None]] = deepcopy(field)
+     change : bool = True
+
+     while change:
+          change = False
+          possible = pencil9x9(newField)
+          print(field9x9_toString(newField, possible))
+
+          # fills in any cells that have only one possible value
+          for i in range(9):
+               for j in range(9):
+                    if newField[i][j] == None:
+                         if sum(possible[i][j]) == 1:
+                              newField[i][j] = possible[i][j].index(True) + 1
+                              change = True
+                              break
+                         elif sum(possible[i][j]) == 0:
+                              return None
+               if change:
+                    break
+
+     solved : bool = True
      for i in range(9):
           for j in range(9):
+               if newField[i][j] == None:
+                    solved = False
+     if solved:
+          return newField
+
+     # finds cells with smallest number of possible values to recurse on
+     possible = pencil9x9(field)
+     minPossible : int = 16
+     minI : int = None
+     minJ : int = None
+
+     for i in range(9):
+          for j in range(9):
+               if newField[i][j] == None:
+                    if sum(possible[i][j]) < minPossible:
+                         minPossible = sum(possible[i][j])
+                         minI = i
+                         minJ = j
+
+     # recurses on the cell with the smallest number of possible values
+     tempField : List[List[int or None]] = deepcopy(newField)
+
+     for k in range(9):
+          if possible[minI][minJ][k]:
+               tempField[minI][minJ] = k + 1
+               
+               attemptField = solveSudoku(tempField)
+               if attemptField != None:
+                    return attemptField
      
+     return None #TODO this is a code hole
+
      for i in range(9):
           for j in range(9):
 
