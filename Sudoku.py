@@ -108,6 +108,30 @@ def stringToField(rawInput : str) -> List[List[int or None]]:
      return field
 
      '''
+def field9x9_toStringSimple(field : List[List[int or None]]) -> str:
+     '''Takes in a sudoku board, and returns a string representing a standard 9x9 board.
+     '''
+     assert type(field) is list
+     assert type(field[0]) is list #TODO
+     assert len(field) == 9
+     assert len(field[0]) == 9 #TODO
+
+     output : str = ""
+
+     for i in range(9):
+          for j in range(9):
+               if field[i][j] == None:
+                    output += "  "
+               else:
+                    output += str(field[i][j]).rjust(2)
+               if (j%3 == 2) and (j != 8):
+                    output += "|"
+          output += "\n"
+          if (i%3 == 2) and (i != 8):
+               output += "------+------+------\n"
+
+     return output
+
      '''
      for i in range(9):
           for j in range(9):
