@@ -1,9 +1,10 @@
 '''
 A small program to solve a sudoku puzzle
+
+By Medic5700
 '''
 
-# typing, for documentation purposes
-from typing import Any, Callable, Dict, Generic, List, Literal, Text, Tuple
+from typing import List
 from copy import deepcopy
 
 def stringToField(rawInput : str) -> List[List[int or None]]:
@@ -19,11 +20,12 @@ def stringToField(rawInput : str) -> List[List[int or None]]:
 
      field : List[List[int or None]] = [[None for _ in range(9)] for _ in range(9)]
 
+     # filters out all non-(hexadecimal and '-') characters, and converts them to ints
      rawNumbers : List[int or None] = [int(j, base=16) if (j in "0123456789abcdef") else None for j in [i for i in rawInput.lower() if ((i in "0123456789abcdef") or i == "-")]]
      
-     assert len(rawNumbers) == 81
+     assert len(rawNumbers) == 81 # asserts there is enough data to fill in the board
 
-     field = [[rawNumbers[i*9 + j] for j in range(9)] for i in range(9)]
+     field = [[rawNumbers[i*9 + j] for j in range(9)] for i in range(9)] # fills in the board
 
      return field
 
@@ -45,6 +47,7 @@ def bitPatternToBrailleSquare(rawInput : List[bool]) -> str:
      assert len(rawInput) == 16
      assert all(type(i) is bool for i in rawInput)
 
+     # maps specific elements of rawInput to specific dots of the braille characters
      leftmap : List[bool] =  (rawInput[0x0], rawInput[0x1], rawInput[0x4], rawInput[0x5],
                               rawInput[0x8], rawInput[0x9], rawInput[0xc], rawInput[0xd])
      rightmap : List[bool] = (rawInput[0x2], rawInput[0x3], rawInput[0x6], rawInput[0x7],
@@ -54,13 +57,14 @@ def bitPatternToBrailleSquare(rawInput : List[bool]) -> str:
 
      leftValue : int = 0x2800 + sum([leftmap[i]*brailleValueMap[i] for i in range(8)])
      rightValue : int = 0x2800 + sum([rightmap[i]*brailleValueMap[i] for i in range(8)])
+     # 0x2800 is the base braille character (blank braille character)
 
      return chr(leftValue) + chr(rightValue)
 
-def field9x9_toString(field : List[List[int or None]], possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]) -> str:
+def field9x9_toString(field : List[List[int or None]], possible : List[List[List[bool]]] = None) -> str:
      '''Takes in a 9x9 field and returns a string representing the field to be printed to screen.
 
-     also takes in a 'possible' field to represent the pencil possibility space of the field.
+     also takes in an optional 'possible' field to represent the pencil possibility space of the field.
      unfilled values in field are represented by a unicode braille characters.
 
      #TODO: add a test for this function
@@ -73,6 +77,8 @@ def field9x9_toString(field : List[List[int or None]], possible : List[List[List
      assert all(len(i) == 9 for i in field)
      assert all(all(type(j) is int or j is None for j in i) for i in field)
 
+     if possible is None: # this being here instead of as default variable avoids issue of possible being bound to complex object (and every subsequent call being bound to the same object)
+          possible = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
      assert type(possible) is list
      assert len(possible) == 9
      assert all(type(i) is list for i in possible)
@@ -83,9 +89,11 @@ def field9x9_toString(field : List[List[int or None]], possible : List[List[List
 
      output : str = ""
 
+     i : int
      for i in range(9):
+          j : int
           for j in range(9):
-               if field[i][j] == None:
+               if field[i][j] is None:
                     output += bitPatternToBrailleSquare(possible[i][j])
                else:
                     output += str(field[i][j]).rjust(2)
@@ -112,15 +120,19 @@ def pencil9x9_singleCell(field : List[List[int or None]], y : int, x : int) -> L
 
      possible : List[bool] = [True if i == "1" else False for i in "1111111110000000"]
 
+     i : int
      for i in range(9): # check row
           if field[y][i] != None:
                value = field[y][i]
                possible[value - 1] = False
+     i : int
      for i in range(9): # check column
           if field[i][x] != None:
                value = field[i][x]
                possible[value - 1] = False
+     i : int
      for i in range(3): # check square
+          j : int
           for j in range(3):
                if field[(y//3)*3 + i][(x//3)*3 + j] != None:
                     value = field[(y//3)*3 + i][(x//3)*3 + j]
@@ -139,9 +151,11 @@ def pencil9x9(field : List[List[int or None]]) -> List[List[List[bool]]]:
 
      possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
 
+     i : int
      for i in range(9):
+          j : int
           for j in range(9):
-               if field[i][j] == None:
+               if field[i][j] is None:
                     possible[i][j] = pencil9x9_singleCell(field, i, j)
 
      return possible
@@ -163,12 +177,13 @@ def solveSudoku(field : List[List[int or None]]) -> List[List[int or None]] or N
      while change:
           change = False
           possible = pencil9x9(newField)
-          print(field9x9_toString(newField, possible))
 
           # fills in any cells that have only one possible value
+          i : int
           for i in range(9):
+               j : int
                for j in range(9):
-                    if newField[i][j] == None:
+                    if newField[i][j] is None:
                          if sum(possible[i][j]) == 1:
                               newField[i][j] = possible[i][j].index(True) + 1
                               change = True
@@ -178,10 +193,13 @@ def solveSudoku(field : List[List[int or None]]) -> List[List[int or None]] or N
                if change:
                     break
 
+     # checks if the board is solved
      solved : bool = True
+     i : int
      for i in range(9):
+          j : int
           for j in range(9):
-               if newField[i][j] == None:
+               if newField[i][j] is None:
                     solved = False
      if solved:
           return newField
@@ -192,9 +210,11 @@ def solveSudoku(field : List[List[int or None]]) -> List[List[int or None]] or N
      minI : int = None
      minJ : int = None
 
+     i : int
      for i in range(9):
+          j : int
           for j in range(9):
-               if newField[i][j] == None:
+               if newField[i][j] is None:
                     if sum(possible[i][j]) < minPossible:
                          minPossible = sum(possible[i][j])
                          minI = i
@@ -203,9 +223,10 @@ def solveSudoku(field : List[List[int or None]]) -> List[List[int or None]] or N
      # recurses on the cell with the smallest number of possible values
      tempField : List[List[int or None]] = deepcopy(newField)
 
-     for k in range(9):
-          if possible[minI][minJ][k]:
-               tempField[minI][minJ] = k + 1
+     i : int
+     for i in range(9):
+          if possible[minI][minJ][i]:
+               tempField[minI][minJ] = i + 1
                
                attemptField = solveSudoku(tempField)
                if attemptField != None:
@@ -225,9 +246,11 @@ def verify9x9(field : List[List[int or None]]) -> bool: #TODO test
      possible : List[List[List[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
 
      valid : bool = True
+     i : int
      for i in range(9):
+          j : int
           for j in range(9):
-               if field[i][j] == None: # checks that an empty cell has the possibility of being filled in
+               if field[i][j] is None: # checks that an empty cell has the possibility of being filled in
                     possible = pencil9x9_singleCell(field, i, j)
                     if sum(possible) == 0:
                          valid = False
