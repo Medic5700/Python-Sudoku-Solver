@@ -275,8 +275,14 @@ def verify9x9(field : list[list[int | None]]) -> bool: #TODO test #TODO change n
      return valid
 
 if __name__ == "__main__":
+def promptUserForBoard() -> list[list[int or None]]:
+     '''Prompts user for a sudoku board, parses the board, and returns the board.
+     '''
 
      #TODO setup debug logging
+     while True:
+          rawInput : str = input("Please enter a sudoku board \n(where numbers are numbers, blanks are '-', and all other characters are ignored): ")
+          rawField : list[list[int | None]] | None = None
 
      field : list[list[int]] = [[None for _ in range(9)] for _ in range(9)]
 
@@ -289,10 +295,20 @@ if __name__ == "__main__":
      # solved =    """218745936 496832517 753196824 531974762 827613459 649257381 962378145 185429673 374561298"""
      
      field = stringToField(testField)
+          rawField = stringToField(rawInput)
+          if rawField is None:
+               print("Invalid board")
+               continue
 
      print(field9x9_toString(field))
+          if not verify9x9(rawField):
+               print("Invalid board")
+               continue
 
      possible : list[list[list[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
+          # print(f"\n{field9x9_toString(rawField)}\n")
+
+          return rawField
 
      possible = pencil9x9(field)
 class TestIntegrationTesting(unittest.TestCase):
