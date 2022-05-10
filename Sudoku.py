@@ -13,6 +13,8 @@ assert version[0] == 3 and version[1] >= 10
 
 from typing import Optional
 from copy import deepcopy
+import logging
+import unittest
 
 def stringToField(rawInput : str) -> list[list[int | None]] | None:
      '''Takes in a string representing a sudoku board, and returns a list of lists representing the board. Returns None if the input is not a valid board.
@@ -293,10 +295,46 @@ if __name__ == "__main__":
      possible : list[list[list[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
 
      possible = pencil9x9(field)
+class TestIntegrationTesting(unittest.TestCase):
+     def testIntegration_integration01(self):
+          """tests that string representing a test board is correctly solved"""
+
+          testField : str = """-7-9----- --3-712-- --485--73 --1---5-7 -465-7381 5-71--9-2 7---198-- --82657-- --97-8-2-"""
+          expectedField : str = """275936418 683471295 194852673 821693547 946527381 537184962 762319854 418265739 359748126"""
+
+          field : list[list[int | None]] = stringToField(testField)
+
+          expected : list[list[int]] = stringToField(expectedField)
+
+          result : list[list[int]] = solveSudoku9x9(field)
+          
+          for i in range(9):
+               for j in range(9):
+                    self.assertEqual(result[i][j], expected[i][j], f"\ninput:\n{field9x9_toString(field)}\nexpected:\n{field9x9_toString(expected)}\nresult:\n{field9x9_toString(result)}")
 
      print(field9x9_toString(field, possible))
+     def testIntegration_integration02(self):
+          """tests that string representing a test board is correctly solved"""
 
      print(field9x9_toString(solveSudoku9x9(field)))
+          testField : str = """---74---6 4-68--5-7 7---9---4 -3-9847-- 82-6134-9 -4----3-- -6237---5 --54-9--- -7--612-8"""
+          expectedField : str = """218745936 496832517 753196824 531984762 827613459 649257381 962378145 185429673 374561298"""
+
+          field : list[list[int | None]] = stringToField(testField)
+
+          expected : list[list[int]] = stringToField(expectedField)
+
+          result : list[list[int]] = solveSudoku9x9(field)
+          
+          for i in range(9):
+               for j in range(9):
+                    self.assertEqual(result[i][j], expected[i][j], f"\ninput:\n{field9x9_toString(field)}\nexpected:\n{field9x9_toString(expected)}\nresult:\n{field9x9_toString(result)}")
+
+     logging.basicConfig(level = logging.ERROR)
+     unittest.main(verbosity = 2, buffer = True, exit = False)
+
+     logging.basicConfig(level = logging.DEBUG)
+
 
      print(verify9x9(solveSudoku9x9(field)))
 
