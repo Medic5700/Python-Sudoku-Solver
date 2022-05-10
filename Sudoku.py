@@ -1,5 +1,5 @@
 '''
-A small program to solve a sudoku puzzle
+A small program to solve a Sudoku Puzzle
 
 By Medic5700
 
@@ -279,21 +279,11 @@ def promptUserForBoard() -> list[list[int or None]]:
      '''Prompts user for a sudoku board, parses the board, and returns the board.
      '''
 
-     #TODO setup debug logging
      while True:
           rawInput : str = input("Please enter a sudoku board \n(where numbers are numbers, blanks are '-', and all other characters are ignored): ")
           rawField : list[list[int | None]] | None = None
 
-     field : list[list[int]] = [[None for _ in range(9)] for _ in range(9)]
 
-     testField : str
-     
-     testField = """-7-9----- --3-712-- --485--73 --1---5-7 -465-7381 5-71--9-2 7---198-- --82657-- --97-8-2-""" # formatted as a single line for easy copy-pasting into terminal
-     # solved =    """275936418 683471295 194852673 821693547 946527381 537184962 762319854 418265739 359748126"""
- 
-     testField = """---74---6 4-68--5-7 7---9---4 -3-9847-- 82-6134-9 -4----3-- -6237---5 --54-9--- -7--612-8""" # formatted as a single line for easy copy-pasting into terminal
-     # solved =    """218745936 496832517 753196824 531974762 827613459 649257381 962378145 185429673 374561298"""
-     
      field = stringToField(testField)
           rawField = stringToField(rawInput)
           if rawField is None:
@@ -352,5 +342,4 @@ class TestIntegrationTesting(unittest.TestCase):
      logging.basicConfig(level = logging.DEBUG)
 
 
-     print(verify9x9(solveSudoku9x9(field)))
 
