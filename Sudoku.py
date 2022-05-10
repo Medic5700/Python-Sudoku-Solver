@@ -50,6 +50,9 @@ def bitPatternToBrailleSquare(rawInput : list[bool]) -> str:
           c d | e f
           left|right
 
+     Reference:
+          https://en.wikipedia.org/wiki/Braille_Patterns
+
      #TODO: add a test for this function
      test with 
           bitPatternToBrailleSquare([True if i == "1" else False for i in "1111111000000000"])
