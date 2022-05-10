@@ -14,8 +14,8 @@ assert version[0] == 3 and version[1] >= 10
 from typing import Optional
 from copy import deepcopy
 
-def stringToField(rawInput : str) -> list[list[int | None]]:
-     '''Takes in a string representing a sudoku board, and returns a list of lists representing the board.
+def stringToField(rawInput : str) -> list[list[int | None]] | None:
+     '''Takes in a string representing a sudoku board, and returns a list of lists representing the board. Returns None if the input is not a valid board.
 
      Single digit hexadecimal numbers are converted to ints.
      '-' is converted to None
@@ -23,14 +23,16 @@ def stringToField(rawInput : str) -> list[list[int | None]]:
      result[y][x] is the value at position (x,y), origin at top left, x increasing right, y increasing down
      '''
      assert type(rawInput) is str
-     assert len(rawInput) >= 81
+     if len(rawInput) < 81:
+          return None
 
      field : list[list[int | None]] = [[None for _ in range(9)] for _ in range(9)]
 
      # filters out all non-(hexadecimal and '-') characters, and converts them to ints
      rawNumbers : list[int | None] = [int(j, base=16) if (j in "0123456789abcdef") else None for j in [i for i in rawInput.lower() if ((i in "0123456789abcdef") or i == "-")]]
      
-     assert len(rawNumbers) == 81 # asserts there is enough data to fill in the board
+     if len(rawNumbers) != 81: # checks if there is enough data to fill in the board
+          return None
 
      field = [[rawNumbers[i*9 + j] for j in range(9)] for i in range(9)] # fills in the board
 
