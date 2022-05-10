@@ -274,7 +274,6 @@ def verify9x9(field : list[list[int | None]]) -> bool: #TODO test #TODO change n
                          valid = False
      return valid
 
-if __name__ == "__main__":
 def promptUserForBoard() -> list[list[int or None]]:
      '''Prompts user for a sudoku board, parses the board, and returns the board.
      '''
@@ -284,23 +283,19 @@ def promptUserForBoard() -> list[list[int or None]]:
           rawField : list[list[int | None]] | None = None
 
 
-     field = stringToField(testField)
           rawField = stringToField(rawInput)
           if rawField is None:
                print("Invalid board")
                continue
 
-     print(field9x9_toString(field))
           if not verify9x9(rawField):
                print("Invalid board")
                continue
 
-     possible : list[list[list[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
           # print(f"\n{field9x9_toString(rawField)}\n")
 
           return rawField
 
-     possible = pencil9x9(field)
 class TestIntegrationTesting(unittest.TestCase):
      def testIntegration_integration01(self):
           """tests that string representing a test board is correctly solved"""
@@ -318,11 +313,9 @@ class TestIntegrationTesting(unittest.TestCase):
                for j in range(9):
                     self.assertEqual(result[i][j], expected[i][j], f"\ninput:\n{field9x9_toString(field)}\nexpected:\n{field9x9_toString(expected)}\nresult:\n{field9x9_toString(result)}")
 
-     print(field9x9_toString(field, possible))
      def testIntegration_integration02(self):
           """tests that string representing a test board is correctly solved"""
 
-     print(field9x9_toString(solveSudoku9x9(field)))
           testField : str = """---74---6 4-68--5-7 7---9---4 -3-9847-- 82-6134-9 -4----3-- -6237---5 --54-9--- -7--612-8"""
           expectedField : str = """218745936 496832517 753196824 531984762 827613459 649257381 962378145 185429673 374561298"""
 
@@ -336,10 +329,26 @@ class TestIntegrationTesting(unittest.TestCase):
                for j in range(9):
                     self.assertEqual(result[i][j], expected[i][j], f"\ninput:\n{field9x9_toString(field)}\nexpected:\n{field9x9_toString(expected)}\nresult:\n{field9x9_toString(result)}")
 
+if __name__ == "__main__":
      logging.basicConfig(level = logging.ERROR)
      unittest.main(verbosity = 2, buffer = True, exit = False)
 
      logging.basicConfig(level = logging.DEBUG)
 
+     field : list[list[int]] = [[None for _ in range(9)] for _ in range(9)]
 
+     field = promptUserForBoard()
+     print(f"Inputted Sudoku Board:\n{field9x9_toString(field)}")
 
+     possible : list[list[list[bool]]] = [[[False for _ in range(16)] for _ in range(9)] for _ in range(9)]
+     possible = pencil9x9(field)
+
+     print(f"Pencilled in Sudoku Board:\n{field9x9_toString(field, possible)}")
+
+     result : list[list[int]] | None = solveSudoku9x9(field)
+     if result is None:
+          print("No Solution Found")
+     elif not verify9x9(result):
+          print("Result Verification Failed")
+     else:
+          print(f"Solved Sudoku Board:\n{field9x9_toString(result)}")
