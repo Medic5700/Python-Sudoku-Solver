@@ -1,12 +1,13 @@
 '''
 A small program to solve a Sudoku Puzzle
-
 By Medic5700
+
+Requires Python3.10
 
 #TODO be able to detect if a sudoku puzzle has multiple solutions
 '''
 
-#asserts python version 3.8 or greater, needed due to variable typing being used extensively
+#asserts python version 3.10 or greater, needed due to variable typing being used extensively
 import sys
 version = sys.version_info
 assert version[0] == 3 and version[1] >= 10
